@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Aguafina+Script&family=Manrope:wght@200..800&display=swap');
+@import "tailwindcss";
+
+@utility font-embed {
+    font-family: "Manrope", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+}
