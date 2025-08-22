@@ -1,67 +1,84 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-interface UserType {
-  name: string;
+interface User {
+    id: string;
+    discordId: string;
+    name: string;
+    avatarUrl?: string; 
 }
 
 interface AuthContextType {
-  user: UserType | null;
-  login: (userData: UserType) => void;
-  logout: () => void;
-  isAuthenticated: boolean;
+    user: User | null;
+    login: () => void;
+    logout: () => void;
+    isAuthenticated: boolean;
+    isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/auth/status', {
-        credentials: 'include', // Essencial para enviar o cookie JWT
-      });
+    const apiUrl = 'http://localhost:3000';
 
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        setUser(null);
-      }
-    } catch (err: unknown) {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const checkAuthStatus = async () => {
+        try {
+            const response = await fetch(`${apiUrl}/auth/status`, {
+                method: 'GET',
+                credentials: 'include',
+            });
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+            if (response.ok) {
+                const data: User = await response.json();
+                setUser(data);
+            } else {
+                setUser(null);
+            }
+        } catch (error) {
+            console.error('Erro ao verificar o status de autenticação:', error);
+            setUser(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-  const login = (userData: UserType) => {
-    setUser(userData);
-  };
+    useEffect(() => {
+        checkAuthStatus();
+    }, []);
 
-  const logout = async () => {
-    setUser(null);
-  };
+    const login = () => {
+        window.location.href = `${apiUrl}/auth/discord`;
+    };
+    const logout = async () => {
+        try {
+            await fetch(`${apiUrl}/auth/logout`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+        } catch (error) {
+            console.error('Erro ao fazer logout:', error);
+        } finally {
+            setUser(null);
+            window.location.href = '/';
+        }
+    };
 
-  const value: AuthContextType = { user, login, logout, isAuthenticated: !!user };
+    const isAuthenticated = user !== null;
 
-  if (loading) {
-    return <div className="text-white text-center p-8">Carregando...</div>;
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === null) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 };
