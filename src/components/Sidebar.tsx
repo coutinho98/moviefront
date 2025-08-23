@@ -6,6 +6,7 @@ import {
 } from "@tabler/icons-react";
 import { useAuth } from "../context/AuthContext";
 import discordSvg from '../assets/discord.svg';
+import cdi from "../assets/cdi.png"
 
 export function MySidebar() {
     const { user, logout } = useAuth();
@@ -47,8 +48,7 @@ export function MySidebar() {
                             href="/"
                             className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
                         >
-                            <img src={discordSvg} alt="Discord Icon" className="h-6 w-6" />
-                            <span className="font-medium whitespace-pre text-black dark:text-white">CDI Movies</span>
+                            <img src={cdi} alt="Discord Icon" className="h-6 w-6" />
                         </a>
                         <div className="mt-8 flex flex-col gap-2">
                             {links.map((link, idx) => (
@@ -63,10 +63,10 @@ export function MySidebar() {
                                 href: "/profile",
                                 icon: (
                                     <img
-                                        src={user?.avatarUrl}
+                                        src={user?.avatarUrl || discordSvg}
                                         className="h-7 w-7 shrink-0 rounded-full"
-                                        width={50}
-                                        height={50}
+                                        width={70}
+                                        height={70}
                                         alt="Avatar"
                                     />
                                 ),
@@ -78,5 +78,3 @@ export function MySidebar() {
         </div>
     );
 }
-
-export default MySidebar;

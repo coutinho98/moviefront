@@ -1,9 +1,7 @@
-"use client";
 import { cn } from "../../utils/cn";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
-import type { ReactNode } from "react";
 
 interface Links {
   label: string;

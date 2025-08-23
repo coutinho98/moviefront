@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { HoverBorderGradient } from './ui/hover-border-gradient';
 import discordSvg from '../assets/discord.svg';

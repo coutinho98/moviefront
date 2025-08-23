@@ -1,5 +1,4 @@
-"use client";
-import React, { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef } from "react";
 import { cn } from "../../utils/cn";

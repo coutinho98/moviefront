@@ -1,19 +1,20 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
 interface User {
     id: string;
     discordId: string;
     name: string;
-    avatarUrl?: string; 
+    avatarUrl?: string | null;
 }
 
 interface AuthContextType {
-    user: User | null;
-    login: () => void;
-    logout: () => void;
     isAuthenticated: boolean;
     isLoading: boolean;
+    user: User | null;
+    logout: () => void;
+    login: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,18 +22,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    const apiUrl = 'http://localhost:3000';
+    const navigate = useNavigate();
 
     const checkAuthStatus = async () => {
         try {
-            const response = await fetch(`${apiUrl}/auth/status`, {
+            const response = await fetch('http://localhost:3000/auth/status', {
                 method: 'GET',
                 credentials: 'include',
             });
 
             if (response.ok) {
-                const data: User = await response.json();
+                const data = await response.json();
                 setUser(data);
             } else {
                 setUser(null);
@@ -50,11 +50,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     const login = () => {
-        window.location.href = `${apiUrl}/auth/discord`;
+        window.location.href = `http://localhost:3000/auth/discord`;
     };
+
     const logout = async () => {
         try {
-            await fetch(`${apiUrl}/auth/logout`, {
+            await fetch('http://localhost:3000/auth/logout', {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -62,14 +63,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             console.error('Erro ao fazer logout:', error);
         } finally {
             setUser(null);
-            window.location.href = '/';
+            navigate('/');
         }
     };
 
     const isAuthenticated = user !== null;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading }}>
+        <AuthContext.Provider value={{ isAuthenticated, isLoading, user, logout, login }}>
             {children}
         </AuthContext.Provider>
     );

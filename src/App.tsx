@@ -1,13 +1,40 @@
-import Sidebar from "./components/Sidebar";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
+import LoginScreen from './components/LoginScreen';
+import './index.css';
+import MainAppScreen from './pages/MainAppScreen';
+
+
+
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full relative flex justify-center items-center bg-black text-white">
+        <p className="text-xl">Carregando...</p>
+      </div>
+    );
+  }
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+};
 
 function App() {
   return (
-    <div className="flex w-full min-h-screen bg-black text-white font-embed">
-      <Sidebar />
-      <div className="flex-grow flex justify-center items-center">
-        <h1 className="text-4xl">hi shadys :)</h1>
-      </div>
-    </div>
+    <Routes>
+      <Route 
+        path="/" 
+        element={<LoginScreen />} 
+      />
+      <Route 
+        path="/home" 
+        element={
+          <PrivateRoute>
+            <MainAppScreen />
+          </PrivateRoute>
+        } 
+      />
+    </Routes>
   );
 }
 
