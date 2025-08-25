@@ -8,18 +8,24 @@ import {
 import { useAuth } from "../context/AuthContext";
 import discordSvg from '../assets/discord.svg';
 import cdi from "../assets/cdi.png"
+import { AddMovieModal } from "./AddMovieModal";
 
 export function MySidebar() {
     const { user, logout } = useAuth();
     const [open, setOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
 
     const links = [
         {
-            label: "Adicionar Filme", 
-            href: "/add-movie",
+            label: "Adicionar Filme",
+            href: "#",
             icon: (
                 <IconPlus className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
+            onClick: handleOpenModal,
         },
         {
             label: "Configurações",
@@ -39,9 +45,7 @@ export function MySidebar() {
     ];
 
     return (
-        <div
-            className="h-screen w-[60px] md:w-[220px] transition-all duration-300 overflow-hidden"
-        >
+        <div className="h-screen w-[60px] md:w-[220px] transition-all duration-300 overflow-hidden">
             <Sidebar open={open} setOpen={setOpen}>
                 <SidebarBody className="justify-between gap-10">
                     <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
@@ -76,6 +80,12 @@ export function MySidebar() {
                     </div>
                 </SidebarBody>
             </Sidebar>
+
+            <AddMovieModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onAddMovieSuccess={handleCloseModal}
+            />
         </div>
     );
 }
