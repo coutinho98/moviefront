@@ -3,6 +3,7 @@ import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import {
     IconArrowLeft,
     IconSettings,
+    IconPlus, // Importa o ícone de adição
 } from "@tabler/icons-react";
 import { useAuth } from "../context/AuthContext";
 import discordSvg from '../assets/discord.svg';
@@ -14,10 +15,10 @@ export function MySidebar() {
 
     const links = [
         {
-            label: "Início",
-            href: "/",
+            label: "Adicionar Filme", 
+            href: "/add-movie",
             icon: (
-                <img src={discordSvg} alt="Discord Icon" className="h-6 w-6" />
+                <IconPlus className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
         },
         {

@@ -15,7 +15,7 @@ const MainAppScreen: React.FC = () => {
             <div className="flex-grow flex flex-col p-4">
                 <main className="flex-grow flex justify-center items-center">
                     <TextRevealCard
-                        text="oi seu filho da puta"
+                        text="oi seu filho da p#@$"
                         revealText={`oi ${user?.name}, belezinha?`}
                     >
                     </TextRevealCard>
