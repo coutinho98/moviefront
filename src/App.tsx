@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import LoginScreen from './components/LoginScreen';
 import './index.css';
-import MainAppScreen from './pages/MainAppScreen';
+import { MainAppScreen } from './pages/MainAppScreen';
 
 
 
@@ -22,17 +22,17 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 function App() {
   return (
     <Routes>
-      <Route 
-        path="/" 
-        element={<LoginScreen />} 
+      <Route
+        path="/"
+        element={<LoginScreen />}
       />
-      <Route 
-        path="/home" 
+      <Route
+        path="/home"
         element={
           <PrivateRoute>
             <MainAppScreen />
           </PrivateRoute>
-        } 
+        }
       />
     </Routes>
   );

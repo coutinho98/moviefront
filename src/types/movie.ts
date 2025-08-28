@@ -1,8 +1,8 @@
 export interface Movie {
-    id: string;
-    title: string;
-    totalPoints: number;
-    numVotes: number;
-    averageScore: number;
-    percentage: number;
+  id: string;
+  title: string;
+  posterUrl?: string; 
+  averageScore: number;
+  numVotes: number;
+  percentage: number;
 }
