@@ -5,8 +5,6 @@ import MovieCard from "../components/MovieCard";
 import type { Movie } from "../types/movie";
 import { AddMovieModal } from "../components/AddMovieModal";
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
 export const MainAppScreen = () => {
     const { isAuthenticated } = useAuth();
     const [movies, setMovies] = useState<Movie[]>([]);
