@@ -5,7 +5,6 @@ import MovieCard from "../components/MovieCard";
 import type { Movie } from "../types/movie";
 import { AddMovieModal } from "../components/AddMovieModal";
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 export const MainAppScreen = () => {
     const { isAuthenticated } = useAuth();
@@ -60,7 +59,7 @@ export const MainAppScreen = () => {
             <div className="overflow-auto p-4 pt-24">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-9 gap-4">
                     {movies.map((movie) => (
-                        <MovieCard key={movie.id} movie={movie} API_KEY={API_KEY} />
+                        <MovieCard key={movie.id} movie={movie} />
                     ))}
                 </div>
             </div>
