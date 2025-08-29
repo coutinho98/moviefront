@@ -88,12 +88,18 @@ const MovieDetailPage: React.FC = () => {
         }
     }, [movie]);
 
+    const token = localStorage.getItem('jwtToken');
+
     const handleVote = async (value: number) => {
+
         if (!isAuthenticated || !movieId) return;
         try {
             const response = await fetch('https://movie-eckw.onrender.com/movies/vote', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 credentials: 'include',
                 body: JSON.stringify({ movieId, value }),
             });
@@ -114,7 +120,10 @@ const MovieDetailPage: React.FC = () => {
         try {
             const response = await fetch('https://movie-eckw.onrender.com/comments', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 credentials: 'include',
                 body: JSON.stringify({ movieId, content: commentText }),
             });
