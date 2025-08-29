@@ -24,13 +24,20 @@ export const AddMovieModal: React.FC<AddMovieModalProps> = ({ isOpen, onClose, o
     setAddError(null);
     setAddSuccess(false);
 
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        setAddError('Você precisa estar logado para adicionar um filme.');
+        setIsAdding(false);
+        return;
+    }
+
     try {
       const response = await fetch('https://movie-eckw.onrender.com/movies', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        credentials: 'include',
         body: JSON.stringify({ title, posterUrl }),
       });
 
