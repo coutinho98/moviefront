@@ -4,7 +4,7 @@ import { useAuth } from './context/AuthContext';
 import LoginScreen from './components/LoginScreen';
 import './index.css';
 import { MainAppScreen } from './pages/MainAppScreen';
-import MovieDetailPage from './pages/MovieDetailPage';
+import MovieDetailPage from './pages/MovieDetailPage'; // Importe o novo componente
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -22,11 +22,11 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/login"
+        path="/"
         element={<LoginScreen />}
       />
       <Route
-        path="/"
+        path="/home"
         element={
           <PrivateRoute>
             <MainAppScreen />
