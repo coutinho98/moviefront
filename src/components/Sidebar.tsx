@@ -1,39 +1,32 @@
-import { useState } from "react";
-import {
-    IconArrowLeft,
-    IconSettings,
-    IconPlus,
-} from "@tabler/icons-react";
-import { useAuth } from "../context/AuthContext";
+import { memo } from "react";
 import logo from "../assets/cdi.png"
 import PillNav from './PillNav/PillNav';
 
 interface MySidebarProps {
-    onAddMovieSuccess: () => void;
+    onAddMovieClick: () => void;
 }
 
-export function MySidebar({ onAddMovieSuccess }: MySidebarProps) {
-    const [open, setOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export const MySidebar = memo(({ onAddMovieClick }: MySidebarProps) => {
 
     return (
-        <div className="flex items-center justify-center h-screen w-full">
+        <div className="flex items-center justify-center min-h-min w-full">
             <PillNav
                 logo={logo}
                 logoAlt="Company Logo"
                 items={[
-                    { label: 'About', href: '/about' },
-                    { label: 'Services', href: '/services' },
-                    { label: 'Contact', href: '/contact' }
+                    { label: 'home', href: '/' },
+                    /* { label: 'meus filmes', href: '/services' }, */
+                    { label: 'sair', href: '/login' }
                 ]}
-                activeHref="/"
+                activeHref="/home"
                 className="custom-nav"
                 ease="power2.easeOut"
                 baseColor="#000000"
                 pillColor="#ffffff"
                 hoveredPillTextColor="#ffffff"
                 pillTextColor="#000000"
+                onAddMovieClick={onAddMovieClick}
             />
         </div>
     );
-}
+});

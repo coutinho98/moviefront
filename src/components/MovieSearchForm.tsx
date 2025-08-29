@@ -17,7 +17,7 @@ const MovieSearchForm: React.FC<MovieSearchFormProps> = ({ onMovieSelected, onCl
         if (searchTerm.length > 2) {
             const fetchMovies = async () => {
                 const response = await fetch(
-                    `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&api_key=${API_KEY}`
+                    `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&api_key=${API_KEY}&language=pt-BR`
                 );
                 const data = await response.json();
                 setSearchResults(data.results || []);

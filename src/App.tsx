@@ -4,8 +4,7 @@ import { useAuth } from './context/AuthContext';
 import LoginScreen from './components/LoginScreen';
 import './index.css';
 import { MainAppScreen } from './pages/MainAppScreen';
-
-
+import MovieDetailPage from './pages/MovieDetailPage';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -23,14 +22,22 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/"
+        path="/login"
         element={<LoginScreen />}
       />
       <Route
-        path="/home"
+        path="/"
         element={
           <PrivateRoute>
             <MainAppScreen />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/movies/:movieId"
+        element={
+          <PrivateRoute>
+            <MovieDetailPage />
           </PrivateRoute>
         }
       />

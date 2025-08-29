@@ -5,6 +5,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
+import { IconPlus } from "@tabler/icons-react"; // Importe o ícone aqui
 
 export type PillNavItem = {
   label: string;
@@ -25,6 +26,7 @@ export interface PillNavProps {
   pillTextColor?: string;
   onMobileMenuClick?: () => void;
   initialLoadAnimation?: boolean;
+  onAddMovieClick?: () => void; // Adicione o novo prop aqui
 }
 
 const PillNav: React.FC<PillNavProps> = ({
@@ -40,6 +42,7 @@ const PillNav: React.FC<PillNavProps> = ({
   pillTextColor,
   onMobileMenuClick,
   initialLoadAnimation = true,
+  onAddMovieClick, // Receba o novo prop aqui
 }) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -55,6 +58,7 @@ const PillNav: React.FC<PillNavProps> = ({
 
   useEffect(() => {
     const layout = () => {
+      // ... (código existente) ...
       circleRefs.current.forEach((circle) => {
         if (!circle?.parentElement) return;
 
@@ -270,6 +274,7 @@ const PillNav: React.FC<PillNavProps> = ({
         aria-label="Primary"
         style={cssVars}
       >
+        {/* ... (código existente) ... */}
         {isRouterLink(items?.[0]?.href) ? (
           <Link
             to={items[0].href}
@@ -334,8 +339,8 @@ const PillNav: React.FC<PillNavProps> = ({
               const isActive = activeHref === item.href;
 
               const pillStyle: React.CSSProperties = {
-                background: "var(--pill-bg, #fff)",
-                color: "var(--pill-text, var(--base, #000))",
+                background: isActive ? "var(--base)" : "var(--pill-bg, #fff)",
+                color: isActive ? "var(--pill-text)" : "var(--pill-text, var(--base, #000))",
                 paddingLeft: "var(--pill-pad-x)",
                 paddingRight: "var(--pill-pad-x)",
               };
@@ -414,9 +419,24 @@ const PillNav: React.FC<PillNavProps> = ({
                 </li>
               );
             })}
+
+            {onAddMovieClick && (
+              <li role="none" className="flex h-full">
+                <button
+                  role="menuitem"
+                  onClick={onAddMovieClick}
+                  className="p-2 rounded-full inline-flex items-center justify-center hover:bg-neutral-800 transition-color cursor-pointer"
+                  style={{
+                    color: resolvedPillTextColor,
+                    background: pillColor,
+                  }}
+                >
+                  <IconPlus className="h-5 w-5" />
+                </button>
+              </li>
+            )}
           </ul>
         </div>
-
         <button
           ref={hamburgerRef}
           onClick={toggleMobileMenu}

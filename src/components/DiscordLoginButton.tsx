@@ -2,11 +2,6 @@ import { useAuth } from '../context/AuthContext';
 import { HoverBorderGradient } from './ui/hover-border-gradient';
 import discordSvg from '../assets/discord.svg';
 
-interface DiscordLoginButtonProps {
-
-  className?: string;
-}
-
 const DiscordLoginButton: React.FC = () => {
   const { login } = useAuth();
 
