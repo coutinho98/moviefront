@@ -10,14 +10,15 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY }) => {
-    const [posterUrl, setPosterUrl] = useState<string | null>(
-        movie.posterUrl ? `https://image.tmdb.org/t/p/w500${movie.posterUrl}` : null
-    );
+    const [posterUrl, setPosterUrl] = useState<string | null>(null);
 
     useEffect(() => {
+        if (movie.posterUrl) {
+            setPosterUrl(`https://image.tmdb.org/t/p/w500${movie.posterUrl}`);
+            return;
+        }
+        
         const fetchPoster = async () => {
-            if (movie.posterUrl) return;
-
             if (movie.title && API_KEY) {
                 try {
                     const response = await fetch(
@@ -36,9 +37,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY }) => {
             }
         };
 
-        if (!movie.posterUrl) {
-            fetchPoster();
-        }
+        fetchPoster();
     }, [movie.title, API_KEY, movie.posterUrl]);
 
     return (
