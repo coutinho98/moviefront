@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
@@ -27,9 +28,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const checkAuthStatus = async () => {
         try {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                setUser(null);
+                setIsLoading(false);
+                return;
+            }
+
             const response = await fetch('https://movie-eckw.onrender.com/auth/status', {
                 method: 'GET',
-                credentials: 'include',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
             });
 
             if (response.ok) {
@@ -37,10 +47,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setUser(data);
             } else {
                 setUser(null);
+                localStorage.removeItem('jwtToken');
             }
         } catch (error) {
             console.error('Erro ao verificar o status de autenticação:', error);
             setUser(null);
+            localStorage.removeItem('jwtToken');
         } finally {
             setIsLoading(false);
         }
@@ -53,26 +65,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             localStorage.setItem('jwtToken', urlToken);
             navigate(location.pathname, { replace: true });
         }
-
         checkAuthStatus();
-    }, [location.search]);
+    }, [location.search, navigate]);
 
     const login = () => {
         window.location.href = `https://movie-eckw.onrender.com/auth/discord`;
     };
 
     const logout = async () => {
-        try {
-            await fetch('https://movie-eckw.onrender.com/auth/logout', {
-                method: 'GET',
-                credentials: 'include',
-            });
-        } catch (error) {
-            console.error('Erro ao fazer logout:', error);
-        } finally {
-            setUser(null);
-            navigate('/');
-        }
+        localStorage.removeItem('jwtToken');
+        setUser(null);
+        navigate('/');
     };
 
     const isAuthenticated = user !== null;
