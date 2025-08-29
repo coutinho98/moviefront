@@ -1,57 +1,84 @@
-import { useEffect, useState, createContext, useContext } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+
+export interface User {
+    id: string;
+    discordId: string;
+    name: string;
+    avatarUrl?: string | null;
+}
 
 interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
+    user: User | null;
+    logout: () => void;
+    login: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
     const location = useLocation();
 
-    useEffect(() => {
-        const checkAuthStatus = async (token?: string) => {
-            try {
-                const headers: Record<string, string> = {};
-                if (token) {
-                    headers['Authorization'] = `Bearer ${token}`;
-                }
-                const response = await fetch('https://movie-eckw.onrender.com/auth/status', {
-                    headers,
-                    credentials: 'include'
-                });
+    const checkAuthStatus = async () => {
+        try {
+            const response = await fetch('https://movie-eckw.onrender.com/auth/status', {
+                method: 'GET',
+                credentials: 'include',
+            });
 
-                if (response.ok) {
-                    setIsAuthenticated(true);
-                } else {
-                    setIsAuthenticated(false);
-                }
-            } catch (error) {
-                console.error('Failed to check auth status', error);
-                setIsAuthenticated(false);
-            } finally {
-                setIsLoading(false);
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data);
+            } else {
+                setUser(null);
             }
-        };
+        } catch (error) {
+            console.error('Erro ao verificar o status de autenticação:', error);
+            setUser(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
+    useEffect(() => {
         const params = new URLSearchParams(location.search);
         const urlToken = params.get('token');
         if (urlToken) {
             localStorage.setItem('jwtToken', urlToken);
-            checkAuthStatus(urlToken);
-        } else {
-            const storedToken = localStorage.getItem('jwtToken');
-            checkAuthStatus(storedToken || undefined);
+            navigate(location.pathname, { replace: true });
         }
-    }, [location]);
+
+        checkAuthStatus();
+    }, [location.search]);
+
+    const login = () => {
+        window.location.href = `https://movie-eckw.onrender.com/auth/discord`;
+    };
+
+    const logout = async () => {
+        try {
+            await fetch('https://movie-eckw.onrender.com/auth/logout', {
+                method: 'GET',
+                credentials: 'include',
+            });
+        } catch (error) {
+            console.error('Erro ao fazer logout:', error);
+        } finally {
+            setUser(null);
+            navigate('/');
+        }
+    };
+
+    const isAuthenticated = user !== null;
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isLoading }}>
+        <AuthContext.Provider value={{ isAuthenticated, isLoading, user, logout, login }}>
             {children}
         </AuthContext.Provider>
     );
