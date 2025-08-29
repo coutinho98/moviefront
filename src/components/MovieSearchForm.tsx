@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import type { TmdbMovie } from '../types/tmdb';
-import { motion } from 'framer-motion';
-import { cn } from '../utils/cn';
 
 interface MovieSearchFormProps {
     onMovieSelected: (movie: { title: string }) => void;
