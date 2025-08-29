@@ -25,7 +25,7 @@ export const AddMovieModal: React.FC<AddMovieModalProps> = ({ isOpen, onClose, o
     setAddSuccess(false);
 
     try {
-      const response = await fetch('http://localhost:3000/movies', {
+      const response = await fetch('https://movie-eckw.onrender.com/movies', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

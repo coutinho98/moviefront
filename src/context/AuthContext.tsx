@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const checkAuthStatus = async () => {
         try {
-            const response = await fetch('http://localhost:3000/auth/status', {
+            const response = await fetch('https://movie-eckw.onrender.com/auth/status', {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -50,12 +50,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     const login = () => {
-        window.location.href = `http://localhost:3000/auth/discord`;
+        window.location.href = `https://movie-eckw.onrender.com/auth/discord`;
     };
 
     const logout = async () => {
         try {
-            await fetch('http://localhost:3000/auth/logout', {
+            await fetch('https://movie-eckw.onrender.com/auth/logout', {
                 method: 'GET',
                 credentials: 'include',
             });

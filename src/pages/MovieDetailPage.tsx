@@ -44,7 +44,7 @@ const MovieDetailPage: React.FC = () => {
     const fetchMovieData = async () => {
         if (!movieId) return;
         try {
-            const response = await fetch(`http://localhost:3000/movies/${movieId}`);
+            const response = await fetch(`https://movie-eckw.onrender.com/movies/${movieId}`);
             if (!response.ok) {
                 throw new Error('Falha ao buscar detalhes do filme.');
             }
@@ -91,7 +91,7 @@ const MovieDetailPage: React.FC = () => {
     const handleVote = async (value: number) => {
         if (!isAuthenticated || !movieId) return;
         try {
-            const response = await fetch('http://localhost:3000/movies/vote', {
+            const response = await fetch('https://movie-eckw.onrender.com/movies/vote', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -112,7 +112,7 @@ const MovieDetailPage: React.FC = () => {
         e.preventDefault();
         if (!isAuthenticated || !movieId || commentText.trim() === '') return;
         try {
-            const response = await fetch('http://localhost:3000/comments', {
+            const response = await fetch('https://movie-eckw.onrender.com/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
