@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
@@ -61,15 +60,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
-   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const urlToken = params.get('token');
-    if (urlToken) {
-        localStorage.setItem('jwtToken', urlToken);
-        navigate('/home', { replace: true });
-    }
-    checkAuthStatus();
-}, [location.search, navigate]);
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const urlToken = params.get('token');
+        if (urlToken) {
+                localStorage.setItem('jwtToken', urlToken);
+            navigate(location.pathname, { replace: true });
+        }
+        checkAuthStatus();
+    }, [location.search, navigate]);
 
     const login = () => {
         window.location.href = `${PRODUCTION_API_URL}/auth/discord`;
