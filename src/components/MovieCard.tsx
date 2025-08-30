@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import TiltedCard from './TiltedCard/TiltedCard';
 import type { Movie } from '../types/movie';
 import type { TmdbMovie } from '../types/tmdb';
@@ -7,9 +6,10 @@ import type { TmdbMovie } from '../types/tmdb';
 interface MovieCardProps {
     movie: Movie;
     API_KEY: string;
+    onClick: () => void; 
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY, onClick }) => {
     const [posterUrl, setPosterUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY }) => {
             setPosterUrl(`https://image.tmdb.org/t/p/w500${movie.posterUrl}`);
             return;
         }
-        
+
         const fetchPoster = async () => {
             if (movie.title && API_KEY) {
                 try {
@@ -41,7 +41,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY }) => {
     }, [movie.title, API_KEY, movie.posterUrl]);
 
     return (
-        <Link to={`/movies/${movie.id}`} className="block">
+        <div onClick={onClick} className="block cursor-pointer"> 
             <div className="flex flex-col items-center">
                 {posterUrl ? (
                     <TiltedCard
@@ -68,7 +68,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY }) => {
                 )}
                 <h3 className="text-lg font-bold text-center mt-2 text-white">{movie.title}</h3>
             </div>
-        </Link>
+        </div>
     );
 };
 

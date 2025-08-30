@@ -3,6 +3,9 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
+const PRODUCTION_API_URL = 'https://movie-eckw.onrender.com';
+const LOCAL_LOGIN_API_URL = 'http://localhost:3000';
+
 export interface User {
     id: string;
     discordId: string;
@@ -35,7 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 return;
             }
 
-            const response = await fetch('https://movie-eckw.onrender.com/auth/status', {
+            const response = await fetch(`${LOCAL_LOGIN_API_URL}/auth/status`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -58,18 +61,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const urlToken = params.get('token');
-        if (urlToken) {
-            localStorage.setItem('jwtToken', urlToken);
-            navigate(location.pathname, { replace: true });
-        }
-        checkAuthStatus();
-    }, [location.search, navigate]);
+   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlToken = params.get('token');
+    if (urlToken) {
+        localStorage.setItem('jwtToken', urlToken);
+        navigate('/home', { replace: true });
+    }
+    checkAuthStatus();
+}, [location.search, navigate]);
 
     const login = () => {
-        window.location.href = `https://movie-eckw.onrender.com/auth/discord`;
+        window.location.href = `${PRODUCTION_API_URL}/auth/discord`;
     };
 
     const logout = async () => {

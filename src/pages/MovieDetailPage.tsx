@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import Counter from '../components/Counter/Counter';
 import { IconPlus, IconMinus } from '@tabler/icons-react';
+import { cn } from '../utils/cn';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -31,8 +32,12 @@ interface MovieDetail {
     }>;
 }
 
-const MovieDetailPage: React.FC = () => {
-    const { movieId } = useParams<{ movieId: string }>();
+interface MovieDetailPageProps {
+    movieId: string;
+    inModal?: boolean;
+}
+
+const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = false }) => {
     const { user, isAuthenticated } = useAuth();
     const [movie, setMovie] = useState<MovieDetail | null>(null);
     const [loading, setLoading] = useState(true);
@@ -157,7 +162,10 @@ const MovieDetailPage: React.FC = () => {
     const hasVoted = movie.Vote.some(vote => vote.userId === user?.id);
 
     return (
-        <div className="min-h-screen w-full bg-black text-white p-8 flex flex-col items-center justify-center">
+        <div className={cn("w-full bg-neutral-900 text-white flex flex-col items-center justify-center", {
+            'h-full': inModal, 
+            'h-[90vh] md:h-[600px]': !inModal,
+        })}>
             <style>
                 {`
                 .custom-scrollbar::-webkit-scrollbar {
@@ -177,9 +185,8 @@ const MovieDetailPage: React.FC = () => {
                 `}
             </style>
 
-            <div className="flex flex-col md:flex-row max-w-4xl w-full h-[80vh] md:h-[600px] bg-neutral-900  shadow-2xl overflow-hidden">
+            <div className="flex flex-col md:flex-row w-full h-full bg-neutral-900">
                 <div className="flex-none w-full md:w-1/2 relative">
-
                     {posterUrl && (
                         <img
                             src={posterUrl}
@@ -189,40 +196,39 @@ const MovieDetailPage: React.FC = () => {
                     )}
                 </div>
 
-                <div className="flex-1 flex flex-col p-6">
-                    <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                        <div className="flex items-center gap-2 mb-4 sticky top-0 bg-neutral-900">
-                            <h2 className="text-2xl font-bold">{movie.title}</h2>
-                            {movie.averageScore > 0 && (
-                                <span className="text-sm font-semibold text-neutral-400">
-                                    ({movie.averageScore.toFixed(1)}/10)
-                                </span>
-                            )}
-                        </div>
-                        <div className="space-y-4">
-                            {movie.Comment.map((comment) => (
-                                comment.user && (
-                                    <motion.div
-                                        key={comment.id}
-                                        className="p-4 shadow-sm flex items-start gap-4 transition-transform hover:scale-[1.01]"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                    >
-                                        {comment.user.avatarUrl && (
-                                            <img
-                                                src={comment.user.avatarUrl}
-                                                alt={comment.user.name}
-                                                className="w-10 h-10"
-                                            />
-                                        )}
-                                        <div>
-                                            <p className="font-semibold">{comment.user.name}</p>
-                                            <p className="text-sm text-neutral-300 break-all">{comment.content}</p>
-                                        </div>
-                                    </motion.div>
-                                )
-                            ))}
-                        </div>
+                <div className="flex-1 flex flex-col p-6 overflow-hidden">
+                    <div className="flex items-center gap-2 mb-4">
+                        <h2 className="text-2xl font-bold">{movie.title}</h2>
+                        {movie.averageScore > 0 && (
+                            <span className="text-sm font-semibold text-neutral-400">
+                                ({movie.averageScore.toFixed(1)}/10)
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-4">
+                        {movie.Comment.map((comment) => (
+                            comment.user && (
+                                <motion.div
+                                    key={comment.id}
+                                    className="p-4 shadow-sm flex items-start gap-4 transition-transform hover:scale-[1.01]"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
+                                    {comment.user.avatarUrl && (
+                                        <img
+                                            src={comment.user.avatarUrl}
+                                            alt={comment.user.name}
+                                            className="w-10 h-10"
+                                        />
+                                    )}
+                                    <div className="w-full">
+                                        <p className="font-semibold">{comment.user.name}</p>
+                                        <p className="text-sm text-neutral-300 break-all">{comment.content}</p>
+                                    </div>
+                                </motion.div>
+                            )
+                        ))}
                     </div>
 
                     {isAuthenticated && !hasVoted && (
@@ -251,7 +257,6 @@ const MovieDetailPage: React.FC = () => {
                             <motion.button
                                 onClick={() => handleVote(voteValue)}
                                 className="ml-2 px-4 py-2 cursor-pointer hover:bg-neutral-700  transition-colors"
-
                             >
                                 Votar
                             </motion.button>
