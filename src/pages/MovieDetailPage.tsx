@@ -7,28 +7,36 @@ import { cn } from '../utils/cn';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-interface MovieDetail {
+export interface User {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+}
+
+export interface Comment {
+    id: string;
+    content: string;
+    userId: string;
+    movieId: string;
+    user: User;
+}
+
+export interface Vote {
+    id: string;
+    value: number;
+    userId: string;
+    movieId: string;
+}
+
+export interface MovieDetail {
     id: string;
     title: string;
     averageScore: number;
     numVotes: number;
     percentage: number;
     posterUrl?: string;
-    Comment: Array<{
-        id: string;
-        content: string;
-        userId: string;
-        user: {
-            id: string;
-            name: string;
-            avatarUrl?: string;
-        };
-    }>;
-    Vote: Array<{
-        id: string;
-        value: number;
-        userId: string;
-    }>;
+    Comment: Comment[];
+    Vote: Vote[];
 }
 
 interface MovieDetailPageProps {
@@ -162,7 +170,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
 
     return (
         <div className={cn("w-full bg-neutral-900 text-white flex flex-col items-center justify-center", {
-            'h-full': inModal, 
+            'h-full': inModal,
             'h-[90vh] md:h-[600px]': !inModal,
         })}>
             <style>
@@ -206,35 +214,46 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
                     </div>
 
                     <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-4">
-                        {movie.Comment.map((comment) => (
-                            comment.user && (
-                                <motion.div
-                                    key={comment.id}
-                                    className="p-4 shadow-sm flex items-start gap-4 transition-transform hover:scale-[1.01]"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                >
-                                    {comment.user.avatarUrl && (
-                                        <img
-                                            src={comment.user.avatarUrl}
-                                            alt={comment.user.name}
-                                            className="w-10 h-10"
-                                        />
-                                    )}
-                                    <div className="w-full">
-                                        <p className="font-semibold">{comment.user.name}</p>
-                                        <p className="text-sm text-neutral-300 break-all">{comment.content}</p>
-                                    </div>
-                                </motion.div>
-                            )
-                        ))}
+                        {movie.Comment.map((comment) => {
+                            const userVote = movie.Vote.find(vote => vote.userId === comment.userId);
+
+                            return (
+                                comment.user && (
+                                    <motion.div
+                                        key={comment.id}
+                                        className="p-4 shadow-sm flex items-start gap-4 transition-transform hover:scale-[1.01]"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                    >
+                                        {comment.user.avatarUrl && (
+                                            <img
+                                                src={comment.user.avatarUrl}
+                                                alt={comment.user.name}
+                                                className="w-10 h-10 rounded-full"
+                                            />
+                                        )}
+                                        <div className="w-full">
+                                            <p className="font-semibold">
+                                                {comment.user.name}
+                                                {userVote && (
+                                                    <span className="ml-2 text-sm text-white">
+                                                        - {userVote.value}/10
+                                                    </span>
+                                                )}
+                                            </p>
+                                            <p className="text-sm text-neutral-300 break-all">{comment.content}</p>
+                                        </div>
+                                    </motion.div>
+                                )
+                            );
+                        })}
                     </div>
 
                     {isAuthenticated && !hasVoted && (
                         <div className="mt-4 flex-none flex items-center">
                             <motion.button
                                 onClick={() => setVoteValue(prev => Math.max(0, prev - 1))}
-                                className="p-1  bg-neutral-800 hover:bg-neutral-700 transition-colors"
+                                className="p-1  bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-l-md"
                             >
                                 <IconMinus className="w-4 h-4" />
                             </motion.button>
@@ -249,13 +268,13 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
                             />
                             <motion.button
                                 onClick={() => setVoteValue(prev => Math.min(10, prev + 1))}
-                                className="p-1  bg-neutral-800 hover:bg-neutral-700 transition-colors"
+                                className="p-1  bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-r-md"
                             >
                                 <IconPlus className="w-4 h-4" />
                             </motion.button>
                             <motion.button
                                 onClick={() => handleVote(voteValue)}
-                                className="ml-2 px-4 py-2 cursor-pointer hover:bg-neutral-700  transition-colors"
+                                className="ml-2 px-4 py-2 cursor-pointer hover:bg-neutral-700 transition-colors rounded-md"
                             >
                                 Votar
                             </motion.button>
@@ -268,12 +287,12 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
                                 value={commentText}
                                 onChange={(e) => setCommentText(e.target.value)}
                                 placeholder="Adicione um comentario..."
-                                className="w-full  p-3 text-white placeholder-neutral-500 focus:outline-none pr-20 resize-none custom-scrollbar"
+                                className="w-full bg-neutral-800 rounded-md p-3 text-white placeholder-neutral-500 focus:outline-none pr-20 resize-none custom-scrollbar"
                                 rows={1}
                             />
                             <motion.span
                                 onClick={handleCommentSubmit}
-                                className="absolute right-4 bottom-5 cursor-pointer text-white  hover:underline underline-offset-4 transition-colors"
+                                className="absolute right-4 bottom-5 cursor-pointer text-white hover:underline underline-offset-4 transition-colors"
                             >
                                 Postar
                             </motion.span>
