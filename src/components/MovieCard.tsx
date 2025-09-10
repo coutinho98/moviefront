@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TiltedCard from './TiltedCard/TiltedCard';
-import type { Movie } from '../types/Movie';
+import type { Movie } from '../types/movie';
 import type { TmdbMovie } from '../types/tmdb';
 
 interface MovieCardProps {
@@ -17,7 +17,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY, onClick }) => {
             setPosterUrl(`https://image.tmdb.org/t/p/w500${movie.posterUrl}`);
             return;
         }
-
         const fetchPoster = async () => {
             if (movie.title && API_KEY) {
                 try {
@@ -36,7 +35,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY, onClick }) => {
                 }
             }
         };
-
         fetchPoster();
     }, [movie.title, API_KEY, movie.posterUrl]);
 
