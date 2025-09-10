@@ -10,7 +10,7 @@ const DiscordLoginButton: React.FC = () => {
       containerClassName="rounded-full"
       as="button"
       onClick={login}
-      className="dark:bg-black bg-gray-900 text-white flex items-center space-x-2 cursor-pointer pointer-events-auto"
+      className="dark:bg-black bg-black text-white flex items-center space-x-2 cursor-pointer pointer-events-auto"
     >
       <img src={discordSvg} alt="Discord Icon" className="h-6 w-6" />
       <span>Discord</span>

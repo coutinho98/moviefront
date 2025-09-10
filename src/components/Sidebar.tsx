@@ -55,27 +55,24 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
     const { theme, setTheme } = useTheme();
 
     const menuItems = [
-      { id: 'home', icon: Home, label: 'Início', href: '/home' },
+        { id: 'home', label: ':)', href: '/home' },
     ];
 
     const toggleTheme = () => {
-      console.log('Tema atual:', theme);
-      if (theme === "dark") {
-        setTheme("light");
-        console.log('Alternando para light');
-      } else if (theme === "light") {
-        setTheme("spiderman");
-        console.log('Alternando para spiderman');
-      } else {
-        setTheme("dark");
-        console.log('Alternando para dark');
-      }
+        console.log('Tema atual:', theme);
+        if (theme === "dark") {
+            setTheme("light");
+        } else if (theme === "light") {
+            setTheme("spiderman");
+        } else {
+            setTheme("dark");
+        }
     };
 
     const getThemeIcon = () => {
-      if (theme === "dark") return <Moon className="h-4 w-4" />;
-      if (theme === "light") return <Sun className="h-4 w-4" />;
-      if (theme === "spiderman") return <User className="h-4 w-4" />;
+        if (theme === "dark") return <Moon className="h-4 w-4" />;
+        if (theme === "light") return <Sun className="h-4 w-4" />;
+        if (theme === "spiderman") return <User className="h-4 w-4" />;
     };
 
     return (
@@ -104,7 +101,7 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                         )}
                     >
-                        <item.icon className="h-4 w-4" />
+                       {/*  <item.icon className="h-4 w-4" /> */}
                         {!isCollapsed && (
                             <span className="ml-3">{item.label}</span>
                         )}
@@ -114,7 +111,7 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                 <div className="pt-4">
                     <Button
                         onClick={onAddMovieClick}
-                        className={cn("w-full cursor-pointer", isCollapsed ? 'px-0' : '')}
+                        className={cn("w-full cursor-pointer ", isCollapsed ? 'px-0' : '')}
                         size={isCollapsed ? 'icon' : 'default'}
                         variant="default"
                     >
@@ -125,18 +122,17 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
             </nav>
 
             <div className="border-t p-4">
-                 <Button
-                    variant="ghost"
+                <Button
                     size="icon"
                     onClick={toggleTheme}
                     className={cn(
-                        "w-full mb-2",
+                        "w-full mb-2 cursor-pointer",
                         isCollapsed ? 'px-0' : '',
                         isCollapsed ? 'justify-center' : 'justify-start'
                     )}
                 >
                     {getThemeIcon()}
-                    {!isCollapsed && <span className="ml-3">Alternar Tema</span>}
+                    {!isCollapsed && <span className="ml-3">Tema</span>}
                 </Button>
 
                 <button className={cn(

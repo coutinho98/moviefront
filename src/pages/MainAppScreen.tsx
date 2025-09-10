@@ -6,7 +6,6 @@ import MovieCard from "../components/MovieCard";
 import type { Movie } from "../types/movie";
 import { AddMovieModal } from "../components/AddMovieModal";
 import MovieDetailModal from "../components/MovieDetailModal";
-import { Search } from "lucide-react";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -18,7 +17,7 @@ export const MainAppScreen = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedMovieId, setSelectedMovieId] = useState<string | null>(null);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, _setSearchTerm] = useState('');
 
     const handleToggleSidebar = useCallback(() => setIsSidebarCollapsed(!isSidebarCollapsed), [isSidebarCollapsed]);
     const handleOpenAddModal = useCallback(() => setIsAddModalOpen(true), []);
@@ -82,7 +81,7 @@ export const MainAppScreen = () => {
     const sidebarWidth = isSidebarCollapsed ? 'w-[60px]' : 'w-64';
 
     return (
-        <div className="flex h-screen dark:bg-black dark:text-white bg-white text-black spiderman:bg-red-500 spiderman:text-blue-200 text-foreground">
+        <div className="flex h-screen dark:bg-[#0A0A0A] dark:text-white bg-white text-black spiderman:bg-red-500 spiderman:text-blue-200 text-foreground font-embed">
             <div className={`fixed h-screen ${sidebarWidth} transition-all duration-300 z-10`}>
                 <MySidebar
                     isCollapsed={isSidebarCollapsed}
@@ -93,7 +92,7 @@ export const MainAppScreen = () => {
 
             <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isSidebarCollapsed ? 'ml-[60px]' : 'ml-64'
                 }`}>
-               
+
 
                 <main className="flex-1 overflow-auto p-6">
                     {filteredMovies.length === 0 ? (
