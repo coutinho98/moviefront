@@ -1,32 +1,137 @@
-import { memo } from "react";
-import logo from "../assets/cdi.png"
-import PillNav from './PillNav/PillNav';
+import { memo, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Home, Plus, LogOut, Menu, User } from 'lucide-react';
+import { cn } from "../utils/cn";
 
 interface MySidebarProps {
     onAddMovieClick: () => void;
+    isCollapsed: boolean;
+    onToggle: () => void;
 }
 
-export const MySidebar = memo(({ onAddMovieClick }: MySidebarProps) => {
+type ButtonVariants = "default" | "outline" | "ghost";
+type ButtonSizes = "default" | "sm" | "lg" | "icon";
+
+const Button = ({
+    children,
+    variant = "default",
+    size = "default",
+    className = "",
+    ...props
+}: {
+    children: React.ReactNode;
+    variant?: ButtonVariants;
+    size?: ButtonSizes;
+    className?: string;
+    onClick?: () => void;
+}) => {
+    const baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+    const variants: Record<ButtonVariants, string> = {
+        default: "bg-slate-900 text-slate-50 hover:bg-slate-900/90",
+        outline: "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900",
+        ghost: "hover:bg-slate-100 hover:text-slate-900",
+    };
+    const sizes: Record<ButtonSizes, string> = {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+    };
 
     return (
-        <div className="flex items-center justify-center min-h-min w-full">
-            <PillNav
-                logo={logo}
-                logoAlt="Company Logo"
-                items={[
-                    { label: 'home', href: '/' },
-                    /* { label: 'meus filmes', href: '/services' }, */
-                    { label: 'sair', href: '/login' }
-                ]}
-                activeHref="/home"
-                className="custom-nav"
-                ease="power2.easeOut"
-                baseColor="#000000"
-                pillColor="#ffffff"
-                hoveredPillTextColor="#ffffff"
-                pillTextColor="#000000"
-                onAddMovieClick={onAddMovieClick}
-            />
+        <button
+            className={cn(baseClasses, variants[variant], sizes[size], className)}
+            {...props}
+        >
+            {children}
+        </button>
+    );
+};
+
+export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySidebarProps) => {
+    const { logout, user } = useAuth();
+    const [activeItem, setActiveItem] = useState('home');
+
+    const menuItems = [
+        { id: 'home', icon: Home, label: 'Início', href: '/home' },
+        /* { id: 'configurações', icon: Home, label: 'Configurações', href: '/configuracoes' }, */
+    ];
+
+    return (
+        <div className={cn(
+            "flex h-screen flex-col border-r bg-white transition-all duration-300",
+            isCollapsed ? 'w-[60px]' : 'w-64'
+        )}>
+            <div className="flex h-14 items-center px-4">
+                <Button variant="ghost" size="icon" onClick={onToggle} className="h-8 w-8">
+                    <Menu className="h-4 w-4" />
+                </Button>
+                {!isCollapsed && (
+                    <h1 className="ml-2 text-lg font-semibold">CDI Movies</h1>
+                )}
+            </div>
+
+            <nav className="flex-1 space-y-2 p-4">
+                {menuItems.map((item) => (
+                    <button
+                        key={item.id}
+                        onClick={() => setActiveItem(item.id)}
+                        className={cn(
+                            "flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer",
+                            activeItem === item.id
+                                ? 'bg-slate-100 text-slate-900'
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        )}
+                    >
+                        <item.icon className="h-4 w-4" />
+                        {!isCollapsed && (
+                            <span className="ml-3">{item.label}</span>
+                        )}
+                    </button>
+                ))}
+
+                <div className="pt-4">
+                    <Button
+                        onClick={onAddMovieClick}
+                        className={cn("w-full cursor-pointer", isCollapsed ? 'px-0' : '')}
+                        size={isCollapsed ? 'icon' : 'default'}
+                        variant="default"
+                    >
+                        <Plus className="h-4 w-4" />
+                        {!isCollapsed && <span className="ml-2">Adicionar</span>}
+                    </Button>
+                </div>
+            </nav>
+
+            {/* User Section */}
+            <div className="border-t p-4">
+                <button className={cn(
+                    "flex w-full items-center rounded-lg px-3 py-2 text-sm text-slate-600",
+                    isCollapsed ? 'justify-center' : ''
+                )}>
+                    {user?.avatarUrl ? (
+                        <img src={user.avatarUrl} alt="User Avatar" className="h-10 w-10 rounded-full" />
+                    ) : (
+                        <User className="h-0 w-0" />
+                    )}
+                    {!isCollapsed && user && (
+                        <div className="ml-3 flex-1 text-left">
+                            <p className="text-sm font-medium">{user.name}</p>
+                        </div>
+                    )}
+                </button>
+
+                <button
+                    onClick={logout}
+                    className={cn(
+                        "mt-2 flex w-full items-center rounded-lg cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                        isCollapsed ? 'justify-center' : ''
+                    )}
+                >
+                    <LogOut className="h-4 w-4" />
+                    {!isCollapsed && <span className="ml-3 ">Sair</span>}
+                </button>
+            </div>
         </div>
     );
 });
