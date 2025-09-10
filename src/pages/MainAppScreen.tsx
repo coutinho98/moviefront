@@ -2,10 +2,11 @@ import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { MySidebar } from "../components/Sidebar";
 import MovieCard from "../components/MovieCard";
-import type { Movie } from "../types/movie";
+import type { Movie } from "../types/Movie";
 import { AddMovieModal } from "../components/AddMovieModal";
 import MovieDetailModal from "../components/MovieDetailModal"; 
 
+//aa
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 export const MainAppScreen = () => {
