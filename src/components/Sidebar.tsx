@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Home, Plus, LogOut, Menu, User, Sun, Moon } from 'lucide-react';
+import { Plus, LogOut, Menu, User, Sun, Moon } from 'lucide-react';
 import { cn } from "../utils/cn";
 import { useTheme } from "../context/ThemeContext";
 
@@ -101,7 +101,7 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                         )}
                     >
-                       {/*  <item.icon className="h-4 w-4" /> */}
+                        {/*  <item.icon className="h-4 w-4" /> */}
                         {!isCollapsed && (
                             <span className="ml-3">{item.label}</span>
                         )}
