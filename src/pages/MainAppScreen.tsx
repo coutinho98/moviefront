@@ -82,22 +82,18 @@ export const MainAppScreen = () => {
     const sidebarWidth = isSidebarCollapsed ? 'w-[60px]' : 'w-64';
 
     return (
-        <div className="flex h-screen bg-background text-foreground">
+        <div className="flex h-screen dark:bg-black dark:text-white bg-white text-black spiderman:bg-red-500 spiderman:text-blue-200 text-foreground">
             <div className={`fixed h-screen ${sidebarWidth} transition-all duration-300 z-10`}>
-                <MySidebar 
+                <MySidebar
                     isCollapsed={isSidebarCollapsed}
                     onToggle={handleToggleSidebar}
                     onAddMovieClick={handleOpenAddModal}
                 />
             </div>
 
-            <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-                isSidebarCollapsed ? 'ml-[60px]' : 'ml-64'
-            }`}>
-                <header className="flex h-14 items-center justify-between border-b bg-card px-6">
-                    <h2 className="text-lg font-semibold">Filmes</h2>
-                   
-                </header>
+            <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isSidebarCollapsed ? 'ml-[60px]' : 'ml-64'
+                }`}>
+               
 
                 <main className="flex-1 overflow-auto p-6">
                     {filteredMovies.length === 0 ? (
@@ -107,8 +103,8 @@ export const MainAppScreen = () => {
                                     {searchTerm ? 'Nenhum filme encontrado' : 'Nenhum filme na coleção'}
                                 </h3>
                                 <p className="text-sm">
-                                    {searchTerm 
-                                        ? 'Tente buscar por outro termo' 
+                                    {searchTerm
+                                        ? 'Tente buscar por outro termo'
                                         : 'Adicione filmes à sua coleção'
                                     }
                                 </p>
@@ -117,11 +113,11 @@ export const MainAppScreen = () => {
                     ) : (
                         <>
                             <div className="mb-6">
-                                <p className="text-sm text-muted-foreground">
-                                    {filteredMovies.length} filme{filteredMovies.length !== 1 ? 's' : ''} {searchTerm && 'encontrado'}
+                                <p className="text-lg text-muted-foreground">
+                                    {filteredMovies.length} Filme{filteredMovies.length !== 1 ? 's' : ''} {searchTerm && 'encontrado'}
                                 </p>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
                                 {filteredMovies.map((movie) => (
                                     <MovieCard
