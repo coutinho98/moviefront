@@ -4,12 +4,20 @@ export interface User {
   avatarUrl?: string;
 }
 
+export interface CommentHistory {
+  id: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface Comment {
   id: string;
   content: string;
   userId: string;
   movieId: string;
   user: User;
+  updatedAt: string;
+  history: CommentHistory[];
 }
 
 export interface Vote {
