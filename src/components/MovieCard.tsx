@@ -64,7 +64,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, API_KEY, onClick }) => {
                         Sem Imagem
                     </div>
                 )}
-                <h3 className="text-lg font-bold text-center mt-2 text-black">{movie.title}</h3>
+                <h3 className="text-lg font-bold text-center mt-2 text-foreground">{movie.title}</h3>
             </div>
         </div>
     );

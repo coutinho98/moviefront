@@ -1,3 +1,4 @@
+// src/pages/MainAppScreen.tsx
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { MySidebar } from "../components/Sidebar";
@@ -5,6 +6,7 @@ import MovieCard from "../components/MovieCard";
 import type { Movie } from "../types/movie";
 import { AddMovieModal } from "../components/AddMovieModal";
 import MovieDetailModal from "../components/MovieDetailModal";
+import { Search } from "lucide-react";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -16,6 +18,7 @@ export const MainAppScreen = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedMovieId, setSelectedMovieId] = useState<string | null>(null);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const handleToggleSidebar = useCallback(() => setIsSidebarCollapsed(!isSidebarCollapsed), [isSidebarCollapsed]);
     const handleOpenAddModal = useCallback(() => setIsAddModalOpen(true), []);
@@ -48,41 +51,92 @@ export const MainAppScreen = () => {
         }
     }, [isAuthenticated, fetchMovies]);
 
+    const filteredMovies = movies.filter(movie =>
+        movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (!isAuthenticated) {
-        return <p>Por favor, faça o login.</p>;
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+                <p>Por favor, faça o login.</p>
+            </div>
+        );
     }
 
     if (loading) {
-        return <p>Carregando filmes...</p>;
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+                <p>Carregando filmes...</p>
+            </div>
+        );
     }
 
     if (error) {
-        return <p>Erro: {error}</p>;
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+                <p className="text-red-500">Erro: {error}</p>
+            </div>
+        );
     }
 
     const sidebarWidth = isSidebarCollapsed ? 'w-[60px]' : 'w-64';
 
     return (
-        <div className="relative min-h-screen w-full bg-white flex">
-            <div className={`fixed h-screen ${sidebarWidth} transition-all duration-300`}>
+        <div className="flex h-screen bg-background text-foreground">
+            <div className={`fixed h-screen ${sidebarWidth} transition-all duration-300 z-10`}>
                 <MySidebar 
                     isCollapsed={isSidebarCollapsed}
                     onToggle={handleToggleSidebar}
                     onAddMovieClick={handleOpenAddModal}
                 />
             </div>
-            <div className={`flex-1 overflow-auto p-4 md:pt-4 transition-all duration-300 ${isSidebarCollapsed ? 'ml-[60px]' : 'ml-64'}`}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-9 gap-4">
-                    {movies.map((movie) => (
-                        <MovieCard
-                            key={movie.id}
-                            movie={movie}
-                            API_KEY={API_KEY}
-                            onClick={() => handleOpenMovieDetail(movie.id)}
-                        />
-                    ))}
-                </div>
+
+            <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
+                isSidebarCollapsed ? 'ml-[60px]' : 'ml-64'
+            }`}>
+                <header className="flex h-14 items-center justify-between border-b bg-card px-6">
+                    <h2 className="text-lg font-semibold">Filmes</h2>
+                   
+                </header>
+
+                <main className="flex-1 overflow-auto p-6">
+                    {filteredMovies.length === 0 ? (
+                        <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
+                            <div className="text-center">
+                                <h3 className="text-lg font-medium mb-2">
+                                    {searchTerm ? 'Nenhum filme encontrado' : 'Nenhum filme na coleção'}
+                                </h3>
+                                <p className="text-sm">
+                                    {searchTerm 
+                                        ? 'Tente buscar por outro termo' 
+                                        : 'Adicione filmes à sua coleção'
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="mb-6">
+                                <p className="text-sm text-muted-foreground">
+                                    {filteredMovies.length} filme{filteredMovies.length !== 1 ? 's' : ''} {searchTerm && 'encontrado'}
+                                </p>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
+                                {filteredMovies.map((movie) => (
+                                    <MovieCard
+                                        key={movie.id}
+                                        movie={movie}
+                                        API_KEY={API_KEY}
+                                        onClick={() => handleOpenMovieDetail(movie.id)}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </main>
             </div>
+
             <AddMovieModal
                 isOpen={isAddModalOpen}
                 onClose={handleCloseAddModal}

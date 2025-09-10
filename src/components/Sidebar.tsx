@@ -1,7 +1,8 @@
 import { memo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Home, Plus, LogOut, Menu, User } from 'lucide-react';
+import { Home, Plus, LogOut, Menu, User, Sun, Moon } from 'lucide-react';
 import { cn } from "../utils/cn";
+import { useTheme } from "../context/ThemeContext";
 
 interface MySidebarProps {
     onAddMovieClick: () => void;
@@ -27,9 +28,9 @@ const Button = ({
 }) => {
     const baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
     const variants: Record<ButtonVariants, string> = {
-        default: "bg-slate-900 text-slate-50 hover:bg-slate-900/90",
-        outline: "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900",
-        ghost: "hover:bg-slate-100 hover:text-slate-900",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
     };
     const sizes: Record<ButtonSizes, string> = {
         default: "h-10 px-4 py-2",
@@ -51,15 +52,35 @@ const Button = ({
 export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySidebarProps) => {
     const { logout, user } = useAuth();
     const [activeItem, setActiveItem] = useState('home');
+    const { theme, setTheme } = useTheme();
 
     const menuItems = [
-        { id: 'home', icon: Home, label: 'Início', href: '/home' },
-        /* { id: 'configurações', icon: Home, label: 'Configurações', href: '/configuracoes' }, */
+      { id: 'home', icon: Home, label: 'Início', href: '/home' },
     ];
+
+    const toggleTheme = () => {
+      console.log('Tema atual:', theme);
+      if (theme === "dark") {
+        setTheme("light");
+        console.log('Alternando para light');
+      } else if (theme === "light") {
+        setTheme("spiderman");
+        console.log('Alternando para spiderman');
+      } else {
+        setTheme("dark");
+        console.log('Alternando para dark');
+      }
+    };
+
+    const getThemeIcon = () => {
+      if (theme === "dark") return <Moon className="h-4 w-4" />;
+      if (theme === "light") return <Sun className="h-4 w-4" />;
+      if (theme === "spiderman") return <User className="h-4 w-4" />;
+    };
 
     return (
         <div className={cn(
-            "flex h-screen flex-col border-r bg-white transition-all duration-300",
+            "flex h-screen flex-col border-r bg-background text-foreground transition-all duration-300",
             isCollapsed ? 'w-[60px]' : 'w-64'
         )}>
             <div className="flex h-14 items-center px-4">
@@ -79,8 +100,8 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                         className={cn(
                             "flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer",
                             activeItem === item.id
-                                ? 'bg-slate-100 text-slate-900'
-                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                         )}
                     >
                         <item.icon className="h-4 w-4" />
@@ -103,10 +124,23 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                 </div>
             </nav>
 
-            {/* User Section */}
             <div className="border-t p-4">
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleTheme}
+                    className={cn(
+                        "w-full mb-2",
+                        isCollapsed ? 'px-0' : '',
+                        isCollapsed ? 'justify-center' : 'justify-start'
+                    )}
+                >
+                    {getThemeIcon()}
+                    {!isCollapsed && <span className="ml-3">Alternar Tema</span>}
+                </Button>
+
                 <button className={cn(
-                    "flex w-full items-center rounded-lg px-3 py-2 text-sm text-slate-600",
+                    "flex w-full items-center rounded-lg px-3 py-2 text-sm text-muted-foreground",
                     isCollapsed ? 'justify-center' : ''
                 )}>
                     {user?.avatarUrl ? (
@@ -124,7 +158,7 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                 <button
                     onClick={logout}
                     className={cn(
-                        "mt-2 flex w-full items-center rounded-lg cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                        "mt-2 flex w-full items-center rounded-lg cursor-pointer px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                         isCollapsed ? 'justify-center' : ''
                     )}
                 >
