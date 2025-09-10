@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TiltedCard from './TiltedCard/TiltedCard';
-import type { Movie } from '../types/movie';
+import type { Movie } from '../types/Movie';
 import type { TmdbMovie } from '../types/tmdb';
 
 interface MovieCardProps {
