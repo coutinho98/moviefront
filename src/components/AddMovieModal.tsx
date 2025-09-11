@@ -32,7 +32,7 @@ export const AddMovieModal: React.FC<AddMovieModalProps> = ({ isOpen, onClose, o
     }
 
     try {
-      const response = await fetch('https://movie-eckw.onrender.com/movies', {
+      const response = await fetch('https://movie-bay-alpha.vercel.app/movies', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

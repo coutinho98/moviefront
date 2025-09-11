@@ -26,7 +26,7 @@ export const MainAppScreen = () => {
 
     const fetchMovies = useCallback(async () => {
         try {
-            const response = await fetch("https://movie-eckw.onrender.com/movies");
+            const response = await fetch("https://movie-bay-alpha.vercel.app/movies");
             if (!response.ok) {
                 throw new Error("Falha ao buscar filmes.");
             }
