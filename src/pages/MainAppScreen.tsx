@@ -1,4 +1,3 @@
-// src/pages/MainAppScreen.tsx
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { MySidebar } from "../components/Sidebar";
@@ -81,7 +80,7 @@ export const MainAppScreen = () => {
     const sidebarWidth = isSidebarCollapsed ? 'w-[60px]' : 'w-64';
 
     return (
-        <div className="flex h-screen dark:bg-[#0A0A0A] dark:text-white bg-[#FAFAFA] text-black spiderman:bg-red-500 spiderman:text-blue-200 text-foreground font-embed">
+        <div className="flex h-screen dark:bg-[#0A0A0A] dark:text-white bg-[#FAFAFA] text-black spiderman:bg-[#0A0A0A] spiderman:text-white text-foreground font-embed">
             <div className={`fixed h-screen ${sidebarWidth} transition-all duration-300 z-10`}>
                 <MySidebar
                     isCollapsed={isSidebarCollapsed}
