@@ -56,7 +56,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
     const fetchMovieData = async () => {
         if (!movieId) return;
         try {
-            const response = await fetch(`https://movie-eckw.onrender.com/movies/${movieId}`);
+            const response = await fetch(`https://movie-bay-alpha.vercel.app/movies/${movieId}`);
             if (!response.ok) {
                 throw new Error('Falha ao buscar detalhes do filme.');
             }
@@ -106,7 +106,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
 
         if (!isAuthenticated || !movieId) return;
         try {
-            const response = await fetch('https://movie-eckw.onrender.com/movies/vote', {
+            const response = await fetch('https://movie-bay-alpha.vercel.app/movies/vote', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, inModal = fa
         e.preventDefault();
         if (!isAuthenticated || !movieId || commentText.trim() === '') return;
         try {
-            const response = await fetch('https://movie-eckw.onrender.com/comments', {
+            const response = await fetch('https://movie-bay-alpha.vercel.app/comments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
