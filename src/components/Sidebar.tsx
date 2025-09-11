@@ -77,7 +77,7 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
 
     return (
         <div className={cn(
-            "flex h-screen flex-col border-r bg-background text-foreground transition-all duration-300",
+            "flex h-screen flex-col shadow-xl/20 bg-[#F6F6F6] text-foreground transition-all duration-300",
             isCollapsed ? 'w-[60px]' : 'w-64'
         )}>
             <div className="flex h-14 items-center px-4">
@@ -111,17 +111,17 @@ export const MySidebar = memo(({ isCollapsed, onToggle, onAddMovieClick }: MySid
                 <div className="pt-4">
                     <Button
                         onClick={onAddMovieClick}
-                        className={cn("w-full cursor-pointer ", isCollapsed ? 'px-0' : '')}
+                        className={cn("w-full cursor-pointer bg-white shadow-lg rounded-xl", isCollapsed ? 'px-0' : '')}
                         size={isCollapsed ? 'icon' : 'default'}
                         variant="default"
                     >
                         <Plus className="h-4 w-4" />
-                        {!isCollapsed && <span className="ml-2">Adicionar</span>}
+                        {!isCollapsed && <span className="ml-2 font-embed">Adicionar</span>}
                     </Button>
                 </div>
             </nav>
 
-            <div className="border-t p-4">
+            <div className="border-t border-black/10 p-4">
                 <Button
                     size="icon"
                     onClick={toggleTheme}

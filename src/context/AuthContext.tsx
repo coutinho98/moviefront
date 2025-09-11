@@ -68,7 +68,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, [location.search, navigate]);
 
     const login = () => {
-        window.location.href = `https://movie-eckw.onrender.com/auth/discord`;
+        window.location.href = `http://localhost:3000/auth/discord`;
     };
 
     const logout = async () => {
